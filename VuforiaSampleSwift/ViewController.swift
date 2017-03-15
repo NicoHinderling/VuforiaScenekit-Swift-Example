@@ -8,12 +8,19 @@
 //
 import UIKit
 
+import ModelIO
+import SceneKit
+import SceneKit.ModelIO
+
+
 class ViewController: UIViewController {
     
     var vuforiaManager: VuforiaManager? = nil
     
     let boxMaterial = SCNMaterial()
     fileprivate var lastSceneName: String? = nil
+    
+    var imageTargetSizes: [String: (CGFloat, CGFloat)] = [:]
     
     deinit {
         NotificationCenter.default.removeObserver(self)
@@ -30,8 +37,8 @@ class ViewController: UIViewController {
             fatalError("\"vuforiaLicenseKey\" seems to be missing from your Keys.plist")
         }
         
-//        prepare(vuforiaLicenseKey, vuforiaDataSetFile: "PhilipsAdvertisement.xml")
-        prepare(vuforiaLicenseKey, vuforiaDataSetFile: "StonesAndChips.xml")
+        prepare(vuforiaLicenseKey, vuforiaDataSetFile: "PhilipsAdvertisement.xml")
+        //        prepare(vuforiaLicenseKey, vuforiaDataSetFile: "StonesAndChips.xml")
     }
     
     override func didReceiveMemoryWarning() {
@@ -56,6 +63,9 @@ class ViewController: UIViewController {
 
 private extension ViewController {
     func prepare(_ vuforiaLicenseKey: String, vuforiaDataSetFile: String) {
+        // Get Image Target Sizes
+        imageTargetSizes = ImageTargetParser(vuforiaDataSetFile).imageTargetSizes
+        
         vuforiaManager = VuforiaManager(licenseKey: vuforiaLicenseKey, dataSetFile: vuforiaDataSetFile)
         if let manager = vuforiaManager {
             manager.delegate = self
@@ -133,8 +143,14 @@ extension ViewController: VuforiaManagerDelegate {
                     manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "stones"])
                     lastSceneName = "stones"
                 }
-            }else {
-                boxMaterial.diffuse.contents = UIColor.blue
+            } else if trackerableName == "Philips_ad_single_image_test" {
+                if lastSceneName != "philips" {
+                    manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "philips"])
+                    lastSceneName = "philips"
+                }
+            } else {
+                //                boxMaterial.diffuse.contents = UIColor.blue
+                //                boxMaterial.diffuse.contents = UIColor.black
                 
                 if lastSceneName != "chips" {
                     manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "chips"])
@@ -148,16 +164,37 @@ extension ViewController: VuforiaManagerDelegate {
 
 extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
     
+    func collada2SCNNode(filepath:String) -> SCNNode {
+        
+        let node = SCNNode()
+        let scene = SCNScene(named: filepath)
+        let nodeArray = scene!.rootNode.childNodes
+        
+        for childNode in nodeArray {
+            node.addChildNode(childNode as SCNNode)
+        }
+        
+        return node
+    }
+    
     func scene(for view: VuforiaEAGLView!, userInfo: [String : Any]?) -> SCNScene! {
         guard let userInfo = userInfo else {
             print("default scene")
             return createStonesScene(with: view)
         }
         
-        if let sceneName = userInfo["scene"] as? String , sceneName == "stones" {
+        guard let sceneName = userInfo["scene"] as? String else {
+            fatalError("Scene got messed up yo...")
+        }
+        
+        // Turn this into a switch statement later
+        if sceneName == "stones" {
             print("stones scene")
             return createStonesScene(with: view)
-        }else {
+        } else if sceneName == "philips" {
+            print("philips scene")
+            return createPhilipsScene(with: view)
+        } else {
             print("chips scene")
             return createChipsScene(with: view)
         }
@@ -165,8 +202,6 @@ extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
     
     fileprivate func createStonesScene(with view: VuforiaEAGLView) -> SCNScene {
         let scene = SCNScene()
-        
-        boxMaterial.diffuse.contents = UIColor.lightGray
         
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
@@ -184,10 +219,13 @@ extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
         let planeNode = SCNNode()
         planeNode.name = "plane"
         
+        if let stoneSize = imageTargetSizes["stones"] {
+            planeNode.geometry = SCNPlane(width: stoneSize.0/view.objectScale, height: stoneSize.1/view.objectScale)
+        }
         // Set size of plane to cover the whole marker; marker dimensions according to marker XML file
-        planeNode.geometry = SCNPlane(width: 0.247/view.objectScale, height: 0.173/view.objectScale)
         
-        //        planeNode.position = SCNVector3Make(0, 0, -15)
+        
+        planeNode.position = SCNVector3Make(0, 0, -15)
         let planeMaterial = SCNMaterial()
         planeMaterial.diffuse.contents = UIColor.green
         planeMaterial.transparency = 0.6
@@ -200,8 +238,6 @@ extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
         boxNode.geometry?.firstMaterial = boxMaterial
         //        boxNode.position = SCNVector3Make(0, 0, -15);
         scene.rootNode.addChildNode(boxNode)
-        
-        
         
         return scene
     }
@@ -226,7 +262,11 @@ extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
         
         let planeNode = SCNNode()
         planeNode.name = "plane"
-        planeNode.geometry = SCNPlane(width: 247.0/view.objectScale, height: 173.0/view.objectScale)
+        if let chipSize = imageTargetSizes["chips"] {
+            planeNode.geometry = SCNPlane(width: chipSize.0/view.objectScale, height: chipSize.1/view.objectScale)
+        }
+        
+        planeNode.geometry = SCNPlane(width: 0.247/view.objectScale, height: 0.173/view.objectScale)
         planeNode.position = SCNVector3Make(0, 0, -1)
         let planeMaterial = SCNMaterial()
         planeMaterial.diffuse.contents = UIColor.red
@@ -243,19 +283,55 @@ extension ViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
         return scene
     }
     
+    fileprivate func createPhilipsScene(with view: VuforiaEAGLView) -> SCNScene {
+        let scene = SCNScene()
+        
+        boxMaterial.diffuse.contents = UIColor.black
+        
+        //        let iphoneNode = collada2SCNNode(filepath: "iPhone.dae")
+        //        iphoneNode.geometry?.firstMaterial = boxMaterial
+        //        scene.rootNode.addChildNode(iphoneNode)
+        
+        // Load the .OBJ file
+        guard let url = Bundle.main.url(forResource: "bmw", withExtension: "obj") else { fatalError("Failed to find model file.") }
+        guard let object = MDLAsset(url: url).object(at: 0) as? MDLMesh else { fatalError("Failed to get mesh from asset.") }
+        
+        let car = SCNNode(mdlObject: object)
+        
+        if let carGeometry = car.geometry {
+            for index in 0 ..< carGeometry.materials.count {
+                carGeometry.materials[index] = boxMaterial
+            }
+        }
+        
+        //        car.position = SCNVector3Make(0, 0, -200)
+        //        let modelScale: Float = 0.01
+        let modelScale: Float = 0.005
+        car.scale = SCNVector3(x: modelScale, y: modelScale, z: modelScale)
+        car.eulerAngles = SCNVector3Make(Float(M_PI_2), 0, 0)
+        
+        
+        scene.rootNode.addChildNode(car)
+        
+        return scene
+    }
+    
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchDownNode node: SCNNode!) {
         print("touch down \(node.name)\n")
-        boxMaterial.transparency = 0.6
+        boxMaterial.transparency = 0.7
+        boxMaterial.diffuse.contents = UIColor.white
     }
     
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchUp node: SCNNode!) {
         print("touch up \(node.name)\n")
         boxMaterial.transparency = 1.0
+        boxMaterial.diffuse.contents = UIColor.black
     }
     
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchCancel node: SCNNode!) {
         print("touch cancel \(node.name)\n")
         boxMaterial.transparency = 1.0
+        boxMaterial.diffuse.contents = UIColor.black
     }
 }
 
