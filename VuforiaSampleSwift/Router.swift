@@ -9,12 +9,12 @@ class Router {
         window.rootViewController = navigationController
     }
     
-    func pop() -> UIViewController? {
-        return navigationController.popViewController(animated: true)
+    func pop() {
+        navigationController.popViewController(animated: true)
     }
     
     func push(_ newRoute: Route) {
-        return navigationController.pushViewController(newRoute.view, animated: true)
+        navigationController.pushViewController(newRoute.view, animated: true)
     }
 }
 
