@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2A48E5091E57DB9B005DFB5B /* vuforia-sdk-ios-6-2-6 in Resources */ = {isa = PBXBuildFile; fileRef = 2A48E5081E57DB9B005DFB5B /* vuforia-sdk-ios-6-2-6 */; };
 		926096D41D4163B600510C24 /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 926096D31D4163B600510C24 /* SpriteKit.framework */; };
 		927B76D71D27FDC600C4F5CC /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B76D41D27FDC600C4F5CC /* AVFoundation.framework */; };
 		927B76D81D27FDC600C4F5CC /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927B76D51D27FDC600C4F5CC /* CoreMotion.framework */; };
@@ -61,7 +60,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2A48E5081E57DB9B005DFB5B /* vuforia-sdk-ios-6-2-6 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "vuforia-sdk-ios-6-2-6"; sourceTree = "<group>"; };
 		926096D31D4163B600510C24 /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
 		927B76D31D27FDC600C4F5CC /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		927B76D41D27FDC600C4F5CC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -184,7 +182,6 @@
 			children = (
 				C3A8C4FB1E78C71200E9B502 /* Models */,
 				C312B10E1E77122B008D2373 /* VuforiaAssets */,
-				2A48E5081E57DB9B005DFB5B /* vuforia-sdk-ios-6-2-6 */,
 				92AA11801D27A6CD00E56CBE /* VuforiaSampleSwift-Bridging-Header.h */,
 				927B76E31D27FF2300C4F5CC /* VuforiaManager */,
 				92AA11081D27A5EB00E56CBE /* AppDelegate.swift */,
@@ -312,7 +309,6 @@
 				C3A8C5011E78C72100E9B502 /* Iphone_texture.jpg in Resources */,
 				92AA11851D27B96300E56CBE /* Localizable.strings in Resources */,
 				C3A8C4FF1E78C72100E9B502 /* iPhone.dae in Resources */,
-				2A48E5091E57DB9B005DFB5B /* vuforia-sdk-ios-6-2-6 in Resources */,
 				C312B1181E7712CC008D2373 /* StonesAndChips.dat in Resources */,
 				C312B1211E784C33008D2373 /* Keys.plist in Resources */,
 				C3A8C4F81E78C44300E9B502 /* bmw.mtl in Resources */,
