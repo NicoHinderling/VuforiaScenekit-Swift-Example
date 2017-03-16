@@ -7,7 +7,7 @@ This began with the boilerplate code from [yshrkt's Sample Project](https://gith
 ## Demo
 <!--![test](play.png)-->
 
-<img src="play.png" width="80">
+<img src="play.png" width="10">
 
 
 ## Usage
