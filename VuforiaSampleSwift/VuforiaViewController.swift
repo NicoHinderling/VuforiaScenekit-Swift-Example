@@ -23,6 +23,7 @@ extension imageTargets {
 class VuforiaViewController: UIViewController {
     
     var targetFile: String
+    var imageTargetSizes: [String: (CGFloat, CGFloat)] = [:]
     
     init(_ desiredTarget: imageTargets) {
         targetFile = desiredTarget.fileName
@@ -34,10 +35,9 @@ class VuforiaViewController: UIViewController {
     }
     
     var vuforiaManager: VuforiaManager? = nil
-    let boxMaterial = SCNMaterial()
+    let modelTexture = SCNMaterial()
     
     fileprivate var lastSceneName: String? = nil
-    fileprivate var imageTargetSizes: [String: (CGFloat, CGFloat)] = [:]
     
     deinit { NotificationCenter.default.removeObserver(self) }
     
@@ -145,32 +145,26 @@ extension VuforiaViewController: VuforiaManagerDelegate {
         for index in 0 ..< state.numberOfTrackableResults {
             let result = state.trackableResult(at: index)
             
-            print("\(result?.trackable.identifier)")
-            print("\(result?.trackable.name)")
-            
-            let trackerableName = result?.trackable.name
-            if trackerableName == "stones" {
-                boxMaterial.diffuse.contents = UIColor.red
-                
-                if lastSceneName != "stones" {
-                    manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "stones"])
-                    lastSceneName = "stones"
-                }
-            } else if trackerableName == "Philips_ad_single_image_test" {
-                if lastSceneName != "philips" {
-                    manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "philips"])
-                    lastSceneName = "philips"
-                }
-            } else {
-                //                boxMaterial.diffuse.contents = UIColor.blue
-                //                boxMaterial.diffuse.contents = UIColor.black
-                
-                if lastSceneName != "chips" {
-                    manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : "chips"])
-                    lastSceneName = "chips"
-                }
+            guard let trackableResult = result else {
+                print("Result with no trackable detected...")
+                return
             }
-            
+
+            if lastSceneName != trackableResult.trackable.name {
+                switch trackableResult.trackable.name {
+                case "stones":
+                    modelTexture.diffuse.contents = UIColor.red
+                case "chips":
+                    modelTexture.diffuse.contents = UIColor.yellow
+                default:
+                    // Default the ad models to darkGray for now
+                    modelTexture.diffuse.contents = (trackableResult.trackable.name == "bmwAd" ? UIColor.red : UIColor.darkGray)
+                }
+                
+                print("### Changing scene to \(trackableResult.trackable.name)")
+                manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : trackableResult.trackable.name])
+                lastSceneName = trackableResult.trackable.name
+            }
         }
     }
 }
@@ -201,151 +195,50 @@ extension VuforiaViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDele
         }
         
         // Turn this into a switch statement later
-        if sceneName == "stones" {
-            print("stones scene")
+        switch sceneName {
+        case "stones":
             return createStonesScene(with: view)
-        } else if sceneName == "chips" {
-            print("chips scene")
+        case "chips":
             return createChipsScene(with: view)
-        } else {
-            print("philips scene")
-            return createAdvertisementScene(with: view)
+        case "bmwAd":
+            return createBmwScene(with: view)
+        case "iphoneAd":
+            return createIphoneScene(with: view)
+        case "philipsAd":
+            return createPhilipsScene(with: view)
+        default:
+            fatalError("Foreign sceneName detected...")
         }
-    }
-    
-    fileprivate func createStonesScene(with view: VuforiaEAGLView) -> SCNScene {
-        let scene = SCNScene()
-        
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light?.type = .omni
-        lightNode.light?.color = UIColor.lightGray
-        lightNode.position = SCNVector3(x:0, y:10, z:10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light?.type = .ambient
-        ambientLightNode.light?.color = UIColor.darkGray
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        let planeNode = SCNNode()
-        planeNode.name = "plane"
-        
-        if let stoneSize = imageTargetSizes["stones"] {
-            planeNode.geometry = SCNPlane(width: stoneSize.0/view.objectScale, height: stoneSize.1/view.objectScale)
-        }
-        // Set size of plane to cover the whole marker; marker dimensions according to marker XML file
-        
-        
-        planeNode.position = SCNVector3Make(0, 0, -15)
-        let planeMaterial = SCNMaterial()
-        planeMaterial.diffuse.contents = UIColor.green
-        planeMaterial.transparency = 0.6
-        planeNode.geometry?.firstMaterial = planeMaterial
-        scene.rootNode.addChildNode(planeNode)
-        
-        let boxNode = SCNNode()
-        boxNode.name = "box"
-        boxNode.geometry = SCNBox(width:1, height:1, length:1, chamferRadius:0.0)
-        boxNode.geometry?.firstMaterial = boxMaterial
-        //        boxNode.position = SCNVector3Make(0, 0, -15);
-        scene.rootNode.addChildNode(boxNode)
-        
-        return scene
-    }
-    
-    fileprivate func createChipsScene(with view: VuforiaEAGLView) -> SCNScene {
-        let scene = SCNScene()
-        
-        boxMaterial.diffuse.contents = UIColor.lightGray
-        
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light?.type = .omni
-        lightNode.light?.color = UIColor.lightGray
-        lightNode.position = SCNVector3(x:0, y:10, z:10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light?.type = .ambient
-        ambientLightNode.light?.color = UIColor.darkGray
-        scene.rootNode.addChildNode(ambientLightNode)
-        
-        let planeNode = SCNNode()
-        planeNode.name = "plane"
-        if let chipSize = imageTargetSizes["chips"] {
-            planeNode.geometry = SCNPlane(width: chipSize.0/view.objectScale, height: chipSize.1/view.objectScale)
-        }
-        
-        planeNode.geometry = SCNPlane(width: 0.247/view.objectScale, height: 0.173/view.objectScale)
-        planeNode.position = SCNVector3Make(0, 0, -1)
-        let planeMaterial = SCNMaterial()
-        planeMaterial.diffuse.contents = UIColor.red
-        planeMaterial.transparency = 0.6
-        planeNode.geometry?.firstMaterial = planeMaterial
-        scene.rootNode.addChildNode(planeNode)
-        
-        let boxNode = SCNNode()
-        boxNode.name = "box"
-        boxNode.geometry = SCNBox(width:1, height:1, length:1, chamferRadius:0.0)
-        boxNode.geometry?.firstMaterial = boxMaterial
-        scene.rootNode.addChildNode(boxNode)
-        
-        return scene
-    }
-    
-    fileprivate func createAdvertisementScene(with view: VuforiaEAGLView) -> SCNScene {
-        let scene = SCNScene()
-        
-        boxMaterial.diffuse.contents = UIColor.darkGray
-        
-        //        let iphoneNode = collada2SCNNode(filepath: "iPhone.dae")
-        //        iphoneNode.geometry?.firstMaterial = boxMaterial
-        //        scene.rootNode.addChildNode(iphoneNode)
-        
-        // Load the .OBJ file
-        guard let url = Bundle.main.url(forResource: "bulb", withExtension: "obj") else { fatalError("Failed to find model file.") }
-        //        guard let url = Bundle.main.url(forResource: "bmw", withExtension: "obj") else { fatalError("Failed to find model file.") }
-        guard let object = MDLAsset(url: url).object(at: 0) as? MDLMesh else { fatalError("Failed to get mesh from asset.") }
-        
-        let car = SCNNode(mdlObject: object)
-        
-        if let carGeometry = car.geometry {
-            for index in 0 ..< carGeometry.materials.count {
-                carGeometry.materials[index] = boxMaterial
-            }
-        }
-        
-        //        car.position = SCNVector3Make(0, 0, -200)
-        //        let modelScale: Float = 0.01
-        let modelScale: Float = 0.5 // 0.005
-        car.scale = SCNVector3(x: modelScale, y: modelScale, z: modelScale)
-        car.eulerAngles = SCNVector3Make(Float(M_PI_2), 0, 0)
-        
-        
-        scene.rootNode.addChildNode(car)
-        
-        return scene
     }
     
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchDownNode node: SCNNode!) {
-        print("touch down \(node.name)\n")
-        boxMaterial.transparency = 0.7
-        boxMaterial.diffuse.contents = UIColor.white
+        // Touch up down
+        modelTexture.transparency = 0.6
+        guard let sceneName = lastSceneName else { return }
+        
+        if ["philipsAd", "bmwAd", "iphoneAd"].contains(sceneName) {
+            modelTexture.diffuse.contents = UIColor.white
+        }
     }
     
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchUp node: SCNNode!) {
-        print("touch up \(node.name)\n")
-        boxMaterial.transparency = 1.0
-        boxMaterial.diffuse.contents = UIColor.darkGray
+        // Touch up
+        modelTexture.transparency = 0.9
+        
+        guard let sceneName = lastSceneName else { return }
+        if ["philipsAd", "bmwAd", "iphoneAd"].contains(sceneName) {
+            modelTexture.diffuse.contents = (sceneName == "bmwAd" ? UIColor.red : UIColor.darkGray)
+        }
     }
     
     func vuforiaEAGLView(_ view: VuforiaEAGLView!, didTouchCancel node: SCNNode!) {
-        print("touch cancel \(node.name)\n")
-        boxMaterial.transparency = 1.0
-        boxMaterial.diffuse.contents = UIColor.darkGray
+        // Touch canceled
+        modelTexture.transparency = 0.9
+
+        guard let sceneName = lastSceneName else { return }
+        if ["philipsAd", "bmwAd", "iphoneAd"].contains(sceneName) {
+            modelTexture.diffuse.contents = (sceneName == "bmwAd" ? UIColor.red : UIColor.darkGray)
+        }
     }
 }
 

@@ -1,12 +1,3 @@
-//
-//  VuforiaEAGLView.m
-//  VuforiaSampleSwift
-//
-//
-//  Created by Andrew Mendez on 2017/02/18.
-//  Copyright © 2017 Andrew Mendez. All rights reserved.
-//
-
 #import "VuforiaEAGLView.h"
 
 #import <SceneKit/SceneKit.h>
@@ -308,7 +299,7 @@ namespace VuforiaEAGLViewUtils
     [self presentFramebuffer];
 }
 
-#pragma mark Touch Evnets
+#pragma mark Touch Events
 - (SCNNode*)touchedNodeWithLocationInView:(CGPoint)location {
     CGPoint pos = location;
     pos.x *= [[UIScreen mainScreen] nativeScale];

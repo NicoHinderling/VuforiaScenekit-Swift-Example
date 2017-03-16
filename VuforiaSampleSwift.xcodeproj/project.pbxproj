@@ -180,23 +180,23 @@
 		92AA11071D27A5EB00E56CBE /* VuforiaSampleSwift */ = {
 			isa = PBXGroup;
 			children = (
+				92AA11801D27A6CD00E56CBE /* VuforiaSampleSwift-Bridging-Header.h */,
 				C3A8C4FB1E78C71200E9B502 /* Models */,
 				C312B10E1E77122B008D2373 /* VuforiaAssets */,
-				92AA11801D27A6CD00E56CBE /* VuforiaSampleSwift-Bridging-Header.h */,
 				927B76E31D27FF2300C4F5CC /* VuforiaManager */,
+				C3A8C5141E79953A00E9B502 /* Router.swift */,
 				92AA11081D27A5EB00E56CBE /* AppDelegate.swift */,
-				92AA110A1D27A5EB00E56CBE /* VuforiaViewController.swift */,
 				C3A8C4CA1E785CC600E9B502 /* ImageTargetParser.swift */,
 				C312B1221E785469008D2373 /* LandingViewController.swift */,
-				C3A8C5141E79953A00E9B502 /* Router.swift */,
+				92AA110A1D27A5EB00E56CBE /* VuforiaViewController.swift */,
+				C3A8C51F1E7A231900E9B502 /* StoneAndChipsScenes.swift */,
+				C3A8C5211E7A233A00E9B502 /* AdvertisementScenes.swift */,
 				92AA110F1D27A5EB00E56CBE /* Assets.xcassets */,
 				92AA11111D27A5EB00E56CBE /* LaunchScreen.storyboard */,
 				92AA11141D27A5EB00E56CBE /* Info.plist */,
 				92AA11841D27B96300E56CBE /* Localizable.strings */,
 				927B76DF1D27FE5900C4F5CC /* Frameworks */,
 				C312B1201E784C33008D2373 /* Keys.plist */,
-				C3A8C51F1E7A231900E9B502 /* StoneAndChipsScenes.swift */,
-				C3A8C5211E7A233A00E9B502 /* AdvertisementScenes.swift */,
 			);
 			path = VuforiaSampleSwift;
 			sourceTree = "<group>";
