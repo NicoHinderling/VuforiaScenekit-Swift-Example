@@ -5,9 +5,9 @@ Vuforia sample app using Swift and SceneKit.
 This began with the boilerplate code from [yshrkt's Sample Project](https://github.com/yshrkt/VuforiaSampleSwift). Also big thanks to [interactivetech](https://github.com/interactivetech) for troubleshooting some early issues :)
 
 ## Demo
-[Uncompressed Version](demo/uncompressed.mp4)
+Uncompressed Version [here](http://nicohinderling.com/VuforiaAppDemo.mp4)
 
-<img src="demo/demo.gif" height="500">
+<img src="demo.gif" height="500">
 
 
 ## Usage
