@@ -75,6 +75,10 @@ class VuforiaViewController: UIViewController {
 }
 
 private extension VuforiaViewController {
+    @objc func swipedRight(_ gesture: UIGestureRecognizer) {
+        router.pop()
+    }
+
     func prepare(_ vuforiaLicenseKey: String, vuforiaDataSetFile: String) {
         // Get Image Target Sizes
         imageTargetSizes = ImageTargetParser(vuforiaDataSetFile).imageTargetSizes
@@ -86,6 +90,10 @@ private extension VuforiaViewController {
             manager.eaglView.delegate = self
             manager.eaglView.setupRenderer()
             self.view = manager.eaglView
+            
+            let swipedRight = UISwipeGestureRecognizer(target: self, action: #selector(swipedRight(_:)))
+            swipedRight.direction = UISwipeGestureRecognizerDirection.right
+            self.view.addGestureRecognizer(swipedRight)
         }
         
         let notificationCenter = NotificationCenter.default
@@ -151,6 +159,8 @@ extension VuforiaViewController: VuforiaManagerDelegate {
             }
 
             if lastSceneName != trackableResult.trackable.name {
+                modelTexture.transparency = 0.9
+
                 switch trackableResult.trackable.name {
                 case "stones":
                     modelTexture.diffuse.contents = UIColor.red
@@ -161,7 +171,6 @@ extension VuforiaViewController: VuforiaManagerDelegate {
                     modelTexture.diffuse.contents = (trackableResult.trackable.name == "bmwAd" ? UIColor.red : UIColor.darkGray)
                 }
                 
-                print("### Changing scene to \(trackableResult.trackable.name)")
                 manager.eaglView.setNeedsChangeSceneWithUserInfo(["scene" : trackableResult.trackable.name])
                 lastSceneName = trackableResult.trackable.name
             }
