@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="philipsAd" size="0.100000 0.100000" />
+    <ImageTarget name="iphoneAd" size="0.200000 0.164024" />
+    <ImageTarget name="bmwAd" size="0.250000 0.399329" />
+  </Tracking>
+</QCARConfig>

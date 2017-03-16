@@ -1,26 +1,22 @@
-//
-//  AppDelegate.swift
-//  VuforiaSample
-//
-//  Created by Andrew Mendez on 2017/02/18.
-//  Copyright © 2017 Andrew Mendez. All rights reserved.
-//
-
 import UIKit
+
+var router: Router!
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    var window: UIWindow? = UIWindow(frame: UIScreen.main.bounds)
+    var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-        window!.rootViewController = ViewController()
+        self.window = UIWindow()
         window!.makeKeyAndVisible()
+
+        router = Router(window: window!)
+        router.push(.landing)
         
         return true
     }
-
+    
     func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
