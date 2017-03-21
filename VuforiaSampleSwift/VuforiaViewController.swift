@@ -179,20 +179,6 @@ extension VuforiaViewController: VuforiaManagerDelegate {
 }
 
 extension VuforiaViewController: VuforiaEAGLViewSceneSource, VuforiaEAGLViewDelegate {
-    
-    func collada2SCNNode(filepath:String) -> SCNNode {
-        
-        let node = SCNNode()
-        let scene = SCNScene(named: filepath)
-        let nodeArray = scene!.rootNode.childNodes
-        
-        for childNode in nodeArray {
-            node.addChildNode(childNode as SCNNode)
-        }
-        
-        return node
-    }
-    
     func scene(for view: VuforiaEAGLView!, userInfo: [String : Any]?) -> SCNScene! {
         guard let userInfo = userInfo else {
             print("default scene")

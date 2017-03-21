@@ -42,6 +42,19 @@ extension VuforiaViewController {
 
     }
     
+    func collada2SCNNode(filepath:String) -> SCNNode {
+        
+        let node = SCNNode()
+        let scene = SCNScene(named: filepath)
+        let nodeArray = scene!.rootNode.childNodes
+        
+        for childNode in nodeArray {
+            node.addChildNode(childNode as SCNNode)
+        }
+        
+        return node
+    }
+    
     func createGenericDAEModelScene(_ view: VuforiaEAGLView, targetName: String, modelFileName: String) -> SCNScene {
         let scene = SCNScene()
     
