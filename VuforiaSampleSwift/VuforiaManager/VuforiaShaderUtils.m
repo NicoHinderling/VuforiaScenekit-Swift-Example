@@ -1,12 +1,3 @@
-//
-//  VuforiaShaderUtils.m
-//  VuforiaSampleSwift
-//
-//
-//  Created by Andrew Mendez on 2017/02/18.
-//  Copyright © 2017 Andrew Mendez. All rights reserved.
-//
-
 #import "VuforiaShaderUtils.h"
 #import <OpenGLES/ES2/glext.h>
 

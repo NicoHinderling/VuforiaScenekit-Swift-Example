@@ -1,12 +1,3 @@
-//
-//  VuforiaObjects.m
-//  VuforiaSampleSwift
-//
-//
-//  Created by Andrew Mendez on 2017/02/18.
-//  Copyright © 2017 Andrew Mendez. All rights reserved.
-//
-
 #import "VuforiaObjects.h"
 #import <Vuforia/Renderer.h>
 #import <Vuforia/Trackable.h>

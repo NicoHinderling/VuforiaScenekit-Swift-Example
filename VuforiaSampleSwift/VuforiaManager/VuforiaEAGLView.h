@@ -1,12 +1,3 @@
-//
-//  VuforiaEAGLView.h
-//  VuforiaSampleSwift
-//
-//
-//  Created by Andrew Mendez on 2017/02/18.
-//  Copyright © 2017 Andrew Mendez. All rights reserved.
-//
-
 #import <UIKit/UIKit.h>
 #import <SceneKit/SceneKit.h>
 #import <Vuforia/UIGLViewProtocol.h>

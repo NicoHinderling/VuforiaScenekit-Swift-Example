@@ -1,13 +1,3 @@
-/* 
-  Localizable.strings
-  VuforiaSampleSwift
-
- //
- //  Created by Andrew Mendez on 2017/02/18.
- //  Copyright © 2017 Andrew Mendez. All rights reserved.
- //
-*/
-
 "VUFORIA_ERROR_NO_NETWORK_TRANSIENT" = "Unable to contact server. Please try again later.";
 "VUFORIA_ERROR_NO_NETWORK_PERMANENT" = "No network available. Please make sure you are connected to the Internet.";
 "VUFORIA_ERROR_INVALID_KEY" = "Invalid Key used. Please make sure you are using a valid Vuforia App Key.";
