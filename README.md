@@ -20,4 +20,6 @@ Create `VuforiaSampleSwift/Keys.plist` and add your [Vuforia License Key](https:
 vuforiaLicenseKey: [ Your License Key ]
 ```
 
-Sorry for the rough code for now :)
+Sorry for the rough code for now :) 
+
+Feel free to open an issue if you have any problems trying to get the code to work!
